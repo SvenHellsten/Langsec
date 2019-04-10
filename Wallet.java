@@ -1,12 +1,15 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.Lock;
 
 public class Wallet {
     /**
      * The RandomAccessFile of the wallet file
      */  
     private RandomAccessFile file;
+    public final ReentrantLock lock = new ReentrantLock();
 
     /**
      * Creates a Wallet object
@@ -38,6 +41,20 @@ public class Wallet {
 	this.file.writeBytes(str); 
     }
 
+    public void safeWithdraw(int valueToWithdraw) throws Exception{
+        System.out.println(lock.isLocked());
+        
+        lock.Lock();
+        System.out.println(lock.isLocked());
+        if(getBalance() >= valueToWithdraw) {
+            Thread.sleep(3000);
+            setBalance(getBalance()- valueToWithdraw);
+        }
+        else 
+            throw new Exception("not enough moniez");
+
+        lock.unlock();
+    }
     /**
      * Closes the RandomAccessFile in this.file
      */

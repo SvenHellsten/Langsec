@@ -17,16 +17,17 @@ public class ShoppingCart{
 
 			
 			String product = scanner.next();
-			Thread.sleep(3000); 
 			Integer cost = Store.getProductPrice(product);
 
 
 			try{
-				if(wallet.getBalance() - cost > -1 ){
-					wallet.setBalance(wallet.getBalance() - cost);
+				//if(wallet.getBalance() - cost > -1 ){                //Sleep anywhere in this if section to achive over withdrawl and end up with a negative balance. 
+				//	Integer mybalance = wallet.getBalance();
+				//	Thread.sleep(3000);								// If two transactions are taking place during this sleep, only the price of the second one will be charged, but both products will end up in the pocket. 
+					wallet.safeWithdraw(cost);
 					pocket.addProduct(product);
 					System.out.println("Your new balance is: " + Integer.toString(wallet.getBalance()));
-				}
+				//}
 			}catch(Exception e){
 				System.out.println("Exception");
 			}
